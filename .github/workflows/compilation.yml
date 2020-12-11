@@ -36,5 +36,6 @@ jobs:
     - name: Runs all the stages in the shell
       run: |
         export PS2DEV=$PWD/ps2dev
+        export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
         export PATH=$PATH:$PS2DEV/ee/bin
         ./toolchain.sh
