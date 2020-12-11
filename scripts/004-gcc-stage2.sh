@@ -51,6 +51,7 @@ mkdir build-$TARGET-stage2 && cd build-$TARGET-stage2 || { exit 1; }
   --disable-libada \
   --disable-libatomic \
   --disable-multilib \
+  --disable-lto \
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.

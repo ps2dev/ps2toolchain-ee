@@ -27,6 +27,7 @@ mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
   --quiet \
   --prefix="$PS2DEV/$TARGET_ALIAS" \
   --target="$TARGET" \
+  --disable-lto \
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
