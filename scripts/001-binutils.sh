@@ -1,56 +1,37 @@
 #!/bin/bash
-# binutils-2.14.sh by Naomi Peori (naomi@peori.ca)
+# 001-binutils.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
-BINUTILS_VERSION=2.14
 ## Download the source code.
-SOURCE=http://ftpmirror.gnu.org/binutils/binutils-$BINUTILS_VERSION.tar.bz2
-wget --continue $SOURCE || { exit 1; }
-
-## Unpack the source code.
-echo Decompressing Binutils $BINUTILS_VERSION. Please wait.
-rm -Rf binutils-$BINUTILS_VERSION && tar xfj binutils-$BINUTILS_VERSION.tar.bz2 || { exit 1; }
-
-## Enter the source directory and patch the source code.
-cd binutils-$BINUTILS_VERSION || { exit 1; }
-if [ -e ../../patches/binutils-$BINUTILS_VERSION-PS2.patch ]; then
-	cat ../../patches/binutils-$BINUTILS_VERSION-PS2.patch | patch -p1 || { exit 1; }
-fi
-
-OSVER=$(uname)
-if [ ${OSVER:0:10} == MINGW64_NT ]; then
-	TARG_XTRA_OPTS="--build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32"
+## Download the source code.
+REPO_URL="https://github.com/ps2dev/binutils-gdb.git"
+REPO_FOLDER="binutils-gdb"
+BRANCH_NAME="ee-v2.35.1"
+if test ! -d "$REPO_FOLDER"; then
+	git clone --depth 1 -b $BRANCH_NAME $REPO_URL && cd $REPO_FOLDER || exit 1
 else
-	TARG_XTRA_OPTS=""
+	cd $REPO_FOLDER && git fetch origin && git reset --hard origin/${BRANCH_NAME} || exit 1
 fi
+
+TARGET_ALIAS="ee" 
+TARGET="mips64r5900el-ps2-elf"
+TARG_XTRA_OPTS=""
 
 ## Determine the maximum number of processes that Make can work with.
-if [ ${OSVER:0:5} == MINGW ]; then
-	PROC_NR=$NUMBER_OF_PROCESSORS
-elif [ ${OSVER:0:6} == Darwin ]; then
-	PROC_NR=$(sysctl -n hw.ncpu)
-else
-	PROC_NR=$(nproc)
-fi
+PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-echo "Building with $PROC_NR jobs"
+## Create and enter the toolchain/build directory
+mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
-## For each target...
-for TARGET in "ee"; do
-	## Create and enter the build directory.
-	mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
+## Configure the build.
+../configure \
+  --quiet \
+  --prefix="$PS2DEV/$TARGET_ALIAS" \
+  --target="$TARGET" \
+  --disable-lto \
+  $TARG_XTRA_OPTS || { exit 1; }
 
-	## Configure the build.
-	if [ ${OSVER:0:6} == Darwin ]; then
-		CC=/usr/bin/gcc CXX=/usr/bin/g++ LD=/usr/bin/ld CFLAGS="-O0 -ansi -Wno-implicit-int -Wno-return-type" ../configure --quiet --disable-build-warnings --prefix="$PS2DEV/$TARGET" --target="$TARGET" $TARG_XTRA_OPTS || { exit 1; }
-	else
-		../configure --quiet --disable-build-warnings --prefix="$PS2DEV/$TARGET" --target="$TARGET" $TARG_XTRA_OPTS || { exit 1; }
-	fi
-
-	## Compile and install.
-	make --quiet clean && make --quiet -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0 -O2" LDFLAGS="$LDFLAGS -s" && make --quiet install && make --quiet clean || { exit 1; }
-
-	## Exit the build directory.
-	cd .. || { exit 1; }
-
-	## End target.
-done
+## Compile and install.
+make --quiet -j $PROC_NR clean   || { exit 1; }
+make --quiet -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0" || { exit 1; }
+make --quiet -j $PROC_NR install || { exit 1; }
+make --quiet -j $PROC_NR clean   || { exit 1; }

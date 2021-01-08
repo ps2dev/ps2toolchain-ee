@@ -11,7 +11,7 @@ If you're trying to install in your machine the **WHOLE PS2 Development Environm
 
 ## What these scripts do
 
-These scripts download (with wget) and install [binutils 2.14](http://www.gnu.org/software/binutils/ "binutils") (ee), [gcc 3.2.3](https://gcc.gnu.org/ "gcc") (ee), [newlib 1.14.0](https://sourceware.org/newlib/ "newlib") (ee).
+These scripts download (with wget) and install [binutils 2.35.1](http://www.gnu.org/software/binutils/ "binutils") (ee), [gcc 10.2.0](https://gcc.gnu.org/ "gcc") (ee), [newlib 4.0.0](https://sourceware.org/newlib/ "newlib") (ee).
 
 ## Requirements
 
