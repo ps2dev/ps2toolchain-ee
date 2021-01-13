@@ -26,7 +26,7 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## Create and enter the toolchain/build directory
-mkdir build-$TARGET-stage1 && cd build-$TARGET-stage1 || { exit 1; }
+rm -rf mkdir build-$TARGET-stage1 && mkdir build-$TARGET-stage1 && cd build-$TARGET-stage1 || { exit 1; }
 
 ## Configure the build.
 ../configure \
@@ -35,27 +35,30 @@ mkdir build-$TARGET-stage1 && cd build-$TARGET-stage1 || { exit 1; }
   --target="$TARGET" \
   --enable-languages="c" \
   --with-float=hard \
-  --with-newlib \
-  --disable-nls \
-  --disable-shared \
-  --disable-libssp \
-  --disable-libmudflap \
-  --disable-threads \
-  --disable-libgomp \
-  --disable-libquadmath \
-  --disable-target-libiberty \
-  --disable-target-zlib \
-  --without-ppl \
-  --without-cloog \
   --with-headers=no \
+  --without-newlib \
+  --without-cloog \
+  --without-ppl \
+  --disable-decimal-float \
   --disable-libada \
   --disable-libatomic \
-  --disable-multilib \
+  --disable-libffi \
+  --disable-libgomp \
+  --disable-libmudflap \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
   --disable-lto \
+  --disable-multilib \
+  --disable-nls \
+  --disable-shared \
+  --disable-threads \
+  --disable-target-libiberty \
+  --disable-target-zlib \
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
-make --quiet -j $PROC_NR clean   || { exit 1; }
-make --quiet -j $PROC_NR all     || { exit 1; }
-make --quiet -j $PROC_NR install || { exit 1; }
-make --quiet -j $PROC_NR clean   || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
+make --quiet -j $PROC_NR all            || { exit 1; }
+make --quiet -j $PROC_NR install-strip  || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
