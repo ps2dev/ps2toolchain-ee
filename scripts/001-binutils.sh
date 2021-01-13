@@ -20,7 +20,7 @@ TARG_XTRA_OPTS=""
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## Create and enter the toolchain/build directory
-mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
+rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
 ## Configure the build.
 ../configure \
@@ -28,10 +28,11 @@ mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
   --prefix="$PS2DEV/$TARGET_ALIAS" \
   --target="$TARGET" \
   --disable-lto \
+  --disable-sim \
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
 make --quiet -j $PROC_NR clean   || { exit 1; }
 make --quiet -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0" || { exit 1; }
-make --quiet -j $PROC_NR install || { exit 1; }
+make --quiet -j $PROC_NR install-strip || { exit 1; }
 make --quiet -j $PROC_NR clean   || { exit 1; }

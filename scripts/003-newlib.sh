@@ -18,10 +18,13 @@ TARGET="mips64r5900el-ps2-elf"
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## Create and enter the toolchain/build directory
-mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
+rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
 ## Configure the build.
 CFLAGS_FOR_TARGET="-G0" ../configure --prefix="$PS2DEV/$TARGET_ALIAS" --target="$TARGET" || { exit 1; }
 
 ## Compile and install.
-make clean && make -j $PROC_NR && make install && make clean || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
+make --quiet -j $PROC_NR all            || { exit 1; }
+make --quiet -j $PROC_NR install-strip  || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }

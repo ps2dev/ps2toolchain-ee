@@ -26,7 +26,7 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## Create and enter the toolchain/build directory
-mkdir build-$TARGET-stage2 && cd build-$TARGET-stage2 || { exit 1; }
+rm -rf build-$TARGET-stage2 && mkdir build-$TARGET-stage2 && cd build-$TARGET-stage2 || { exit 1; }
 
 ## Configure the build.
 ../configure \
@@ -55,7 +55,7 @@ mkdir build-$TARGET-stage2 && cd build-$TARGET-stage2 || { exit 1; }
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
-make --quiet -j $PROC_NR clean   || { exit 1; }
-make --quiet -j $PROC_NR all     || { exit 1; }
-make --quiet -j $PROC_NR install || { exit 1; }
-make --quiet -j $PROC_NR clean   || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
+make --quiet -j $PROC_NR all            || { exit 1; }
+make --quiet -j $PROC_NR install-strip  || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
