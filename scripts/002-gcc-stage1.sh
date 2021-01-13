@@ -35,23 +35,26 @@ rm -rf mkdir build-$TARGET-stage1 && mkdir build-$TARGET-stage1 && cd build-$TAR
   --target="$TARGET" \
   --enable-languages="c" \
   --with-float=hard \
-  --with-newlib \
-  --disable-nls \
-  --disable-shared \
-  --disable-libssp \
-  --disable-libmudflap \
-  --disable-threads \
-  --disable-libgomp \
-  --disable-libquadmath \
-  --disable-target-libiberty \
-  --disable-target-zlib \
-  --without-ppl \
-  --without-cloog \
   --with-headers=no \
+  --without-newlib \
+  --without-cloog \
+  --without-ppl \
+  --disable-decimal-float \
   --disable-libada \
   --disable-libatomic \
-  --disable-multilib \
+  --disable-libffi \
+  --disable-libgomp \
+  --disable-libmudflap \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
   --disable-lto \
+  --disable-multilib \
+  --disable-nls \
+  --disable-shared \
+  --disable-threads \
+  --disable-target-libiberty \
+  --disable-target-zlib \
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
