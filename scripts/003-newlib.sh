@@ -21,7 +21,7 @@ PROC_NR=$(getconf _NPROCESSORS_ONLN)
 rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
 ## Configure the build.
-CFLAGS_FOR_TARGET="-G0" ../configure --prefix="$PS2DEV/$TARGET_ALIAS" --target="$TARGET" || { exit 1; }
+CFLAGS_FOR_TARGET="-G0 -O2" ../configure --prefix="$PS2DEV/$TARGET_ALIAS" --target="$TARGET" || { exit 1; }
 
 ## Compile and install.
 make --quiet -j $PROC_NR clean          || { exit 1; }
