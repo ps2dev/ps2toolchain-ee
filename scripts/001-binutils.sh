@@ -5,7 +5,7 @@
 ## Download the source code.
 REPO_URL="https://github.com/ps2dev/binutils-gdb.git"
 REPO_FOLDER="binutils-gdb"
-BRANCH_NAME="ee-v2.35.1"
+BRANCH_NAME="ee-v2.36.0"
 if test ! -d "$REPO_FOLDER"; then
 	git clone --depth 1 -b $BRANCH_NAME $REPO_URL && cd $REPO_FOLDER || exit 1
 else
@@ -27,7 +27,6 @@ rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
   --quiet \
   --prefix="$PS2DEV/$TARGET_ALIAS" \
   --target="$TARGET" \
-  --disable-lto \
   --disable-nls \
   --disable-separate-code \
   --disable-sim \
