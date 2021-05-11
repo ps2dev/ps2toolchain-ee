@@ -1,5 +1,5 @@
 #!/bin/bash
-# 004-gcc-stage2.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
+# 005-gcc-stage2.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
 ## Download the source code.
 REPO_URL="https://github.com/ps2dev/gcc.git"
