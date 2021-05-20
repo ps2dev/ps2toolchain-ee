@@ -44,23 +44,8 @@ rm -rf build-$TARGET-stage2 && mkdir build-$TARGET-stage2 && cd build-$TARGET-st
   --with-float=hard \
   --with-headers="$PS2DEV/$TARGET_ALIAS/$TARGET/include" \
   --with-newlib \
-  --without-cloog \
-  --without-ppl \
-  --disable-decimal-float \
-  --disable-libada \
-  --disable-libatomic \
-  --disable-libffi \
-  --disable-libgomp \
-  --disable-libmudflap \
-  --disable-libquadmath \
   --disable-libssp \
-  --disable-libstdcxx-pch \
   --disable-multilib \
-  --disable-nls \
-  --disable-shared \
-  --disable-threads \
-  --disable-target-libiberty \
-  --disable-target-zlib \
   --enable-cxx-flags=-G0 \
   $TARG_XTRA_OPTS || { exit 1; }
 

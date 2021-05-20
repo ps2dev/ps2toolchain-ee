@@ -44,23 +44,8 @@ rm -rf build-$TARGET-stage1 && mkdir build-$TARGET-stage1 && cd build-$TARGET-st
   --with-float=hard \
   --with-headers=no \
   --without-newlib \
-  --without-cloog \
-  --without-ppl \
-  --disable-decimal-float \
-  --disable-libada \
-  --disable-libatomic \
-  --disable-libffi \
-  --disable-libgomp \
-  --disable-libmudflap \
-  --disable-libquadmath \
   --disable-libssp \
-  --disable-libstdcxx-pch \
   --disable-multilib \
-  --disable-nls \
-  --disable-shared \
-  --disable-threads \
-  --disable-target-libiberty \
-  --disable-target-zlib \
   $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
