@@ -4,7 +4,7 @@
 ## Download the source code.
 REPO_URL="https://github.com/ps2dev/gcc.git"
 REPO_FOLDER="gcc"
-BRANCH_NAME="ee-v11.2.0"
+BRANCH_NAME="ee-v11.1.0"
 if test ! -d "$REPO_FOLDER"; then
   git clone --depth 1 -b $BRANCH_NAME $REPO_URL && cd "$REPO_FOLDER" || exit 1
 else
