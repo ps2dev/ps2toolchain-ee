@@ -27,7 +27,6 @@ else
 fi
 
 TARGET_ALIAS="ee"
-TARGET="mips64r5900el-ps2-elf"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
 
@@ -50,35 +49,43 @@ mkdir "$PS2DEV_TMP"
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-## Create and enter the toolchain/build directory
-rm -rf "build-$TARGET"
-mkdir "build-$TARGET"
-cd "build-$TARGET"
+## For each target...
+for TARGET in "mips64r5900el-ps2-elf"; do
+  ## Create and enter the toolchain/build directory
+  rm -rf "build-$TARGET"
+  mkdir "build-$TARGET"
+  cd "build-$TARGET"
 
-## Configure the build.
-CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED=1 -Os" ../configure \
-  --prefix="$PS2DEV_TMP/$TARGET_ALIAS" \
-  --target="$TARGET" \
-  --disable-newlib-supplied-syscalls \
-  --enable-newlib-reent-small \
-  --disable-newlib-fvwrite-in-streamio \
-  --disable-newlib-fseek-optimization \
-  --disable-newlib-wide-orient \
-  --enable-newlib-nano-malloc \
-  --disable-newlib-unbuf-stream-opt \
-  --enable-lite-exit \
-  --enable-newlib-global-atexit \
-  --enable-newlib-nano-formatted-io \
-  --disable-nls \
-  $TARG_XTRA_OPTS
+  ## Configure the build.
+  CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED=1 -Os" ../configure \
+    --prefix="$PS2DEV_TMP/$TARGET_ALIAS" \
+    --target="$TARGET" \
+    --disable-newlib-supplied-syscalls \
+    --enable-newlib-reent-small \
+    --disable-newlib-fvwrite-in-streamio \
+    --disable-newlib-fseek-optimization \
+    --disable-newlib-wide-orient \
+    --enable-newlib-nano-malloc \
+    --disable-newlib-unbuf-stream-opt \
+    --enable-lite-exit \
+    --enable-newlib-global-atexit \
+    --enable-newlib-nano-formatted-io \
+    --disable-nls \
+    $TARG_XTRA_OPTS
 
 
-## Compile and install.
-make --quiet -j "$PROC_NR" all
-make --quiet -j "$PROC_NR" install-strip
-make --quiet -j "$PROC_NR" clean
+  ## Compile and install.
+  make --quiet -j "$PROC_NR" all
+  make --quiet -j "$PROC_NR" install-strip
+  make --quiet -j "$PROC_NR" clean
 
-## Copy & rename manually libc, libg and libm to libc-nano, libg-nano and libm-nano
-mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libc.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libc_nano.a"
-mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libg.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libg_nano.a"
-mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libm.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libm_nano.a"
+  ## Copy & rename manually libc, libg and libm to libc-nano, libg-nano and libm-nano
+  mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libc.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libc_nano.a"
+  mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libg.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libg_nano.a"
+  mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libm.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libm_nano.a"
+
+  ## Exit the build directory.
+  cd ..
+
+  ## End target.
+done

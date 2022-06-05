@@ -23,7 +23,6 @@ else
 fi
 
 TARGET_ALIAS="ee"
-TARGET="mips64r5900el-ps2-elf"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
 
@@ -40,25 +39,33 @@ fi
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-## Create and enter the toolchain/build directory
-rm -rf "build-$TARGET-stage1"
-mkdir "build-$TARGET-stage1"
-cd "build-$TARGET-stage1"
+## For each target...
+for TARGET in "mips64r5900el-ps2-elf"; do
+  ## Create and enter the toolchain/build directory
+  rm -rf "build-$TARGET-stage1"
+  mkdir "build-$TARGET-stage1"
+  cd "build-$TARGET-stage1"
 
-## Configure the build.
-../configure \
-  --quiet \
-  --prefix="$PS2DEV/$TARGET_ALIAS" \
-  --target="$TARGET" \
-  --enable-languages="c" \
-  --with-float=hard \
-  --with-headers=no \
-  --without-newlib \
-  --disable-libssp \
-  --disable-multilib \
-  $TARG_XTRA_OPTS
+  ## Configure the build.
+  ../configure \
+    --quiet \
+    --prefix="$PS2DEV/$TARGET_ALIAS" \
+    --target="$TARGET" \
+    --enable-languages="c" \
+    --with-float=hard \
+    --with-headers=no \
+    --without-newlib \
+    --disable-libssp \
+    --disable-multilib \
+    $TARG_XTRA_OPTS
 
-## Compile and install.
-make --quiet -j "$PROC_NR" all
-make --quiet -j "$PROC_NR" install-strip
-make --quiet -j "$PROC_NR" clean
+  ## Compile and install.
+  make --quiet -j "$PROC_NR" all
+  make --quiet -j "$PROC_NR" install-strip
+  make --quiet -j "$PROC_NR" clean
+
+  ## Exit the build directory.
+  cd ..
+
+  ## End target.
+done
