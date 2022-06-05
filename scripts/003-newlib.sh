@@ -14,13 +14,12 @@ REPO_FOLDER="newlib"
 BRANCH_NAME="ee-v4.1.0"
 if test ! -d "$REPO_FOLDER"; then
   git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
-  cd "$REPO_FOLDER"
 else
-  cd "$REPO_FOLDER"
-  git fetch origin
-  git reset --hard "origin/${BRANCH_NAME}"
-  git checkout "$BRANCH_NAME"
+  git -C "$REPO_FOLDER" fetch origin
+  git -C "$REPO_FOLDER" reset --hard "origin/${BRANCH_NAME}"
+  git -C "$REPO_FOLDER" checkout "$BRANCH_NAME"
 fi
+cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
 TARG_XTRA_OPTS=""
