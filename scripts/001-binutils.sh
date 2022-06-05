@@ -1,18 +1,27 @@
 #!/bin/bash
 # 001-binutils.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
+## Exit with code 1 when any command executed returns a non-zero exit code.
+onerr()
+{
+  exit 1;
+}
+trap onerr ERR
+
 ## Download the source code.
 REPO_URL="https://github.com/ps2dev/binutils-gdb.git"
 REPO_FOLDER="binutils-gdb"
 BRANCH_NAME="ee-v2.36.0"
 if test ! -d "$REPO_FOLDER"; then
-  git clone --depth 1 -b $BRANCH_NAME $REPO_URL && cd "$REPO_FOLDER" || exit 1
+  git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
 else
-  cd "$REPO_FOLDER" && git fetch origin && git reset --hard "origin/${BRANCH_NAME}" && git checkout "$BRANCH_NAME" || exit 1
+  git -C "$REPO_FOLDER" fetch origin
+  git -C "$REPO_FOLDER" reset --hard "origin/${BRANCH_NAME}"
+  git -C "$REPO_FOLDER" checkout "$BRANCH_NAME"
 fi
+cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
-TARGET="mips64r5900el-ps2-elf"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
 
@@ -29,21 +38,30 @@ fi
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-## Create and enter the toolchain/build directory
-rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
+## For each target...
+for TARGET in "mips64r5900el-ps2-elf"; do
+  ## Create and enter the toolchain/build directory
+  rm -rf "build-$TARGET"
+  mkdir "build-$TARGET"
+  cd "build-$TARGET"
 
-## Configure the build.
-../configure \
-  --quiet \
-  --prefix="$PS2DEV/$TARGET_ALIAS" \
-  --target="$TARGET" \
-  --disable-separate-code \
-  --disable-sim \
-  --disable-nls \
-  $TARG_XTRA_OPTS || { exit 1; }
+  ## Configure the build.
+  ../configure \
+    --quiet \
+    --prefix="$PS2DEV/$TARGET_ALIAS" \
+    --target="$TARGET" \
+    --disable-separate-code \
+    --disable-sim \
+    --disable-nls \
+    $TARG_XTRA_OPTS
 
-## Compile and install.
-make --quiet -j $PROC_NR clean          || { exit 1; }
-make --quiet -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0" || { exit 1; }
-make --quiet -j $PROC_NR install-strip  || { exit 1; }
-make --quiet -j $PROC_NR clean          || { exit 1; }
+  ## Compile and install.
+  make --quiet -j "$PROC_NR"
+  make --quiet -j "$PROC_NR" install-strip
+  make --quiet -j "$PROC_NR" clean
+
+  ## Exit the build directory.
+  cd ..
+
+  ## End target.
+done
