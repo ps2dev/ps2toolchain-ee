@@ -56,7 +56,6 @@ cd "build-$TARGET"
   $TARG_XTRA_OPTS
 
 ## Compile and install.
-make --quiet -j "$PROC_NR" clean
 make --quiet -j "$PROC_NR" CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0"
 make --quiet -j "$PROC_NR" install-strip
 make --quiet -j "$PROC_NR" clean

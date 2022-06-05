@@ -60,7 +60,6 @@ cd "build-$TARGET-stage2"
   $TARG_XTRA_OPTS
 
 ## Compile and install.
-make --quiet -j "$PROC_NR" clean
 make --quiet -j "$PROC_NR" all
 make --quiet -j "$PROC_NR" install-strip
 make --quiet -j "$PROC_NR" clean

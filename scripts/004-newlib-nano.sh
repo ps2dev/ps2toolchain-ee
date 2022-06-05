@@ -74,7 +74,6 @@ CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED=1 -Os" ../configure \
 
 
 ## Compile and install.
-make --quiet -j "$PROC_NR" clean
 make --quiet -j "$PROC_NR" all
 make --quiet -j "$PROC_NR" install-strip
 make --quiet -j "$PROC_NR" clean
