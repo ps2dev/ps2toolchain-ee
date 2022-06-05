@@ -1,14 +1,25 @@
 #!/bin/bash
 # 003-newlib.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
+## Exit with code 1 when any command executed returns a non-zero exit code.
+onerr()
+{
+  exit 1;
+}
+trap onerr ERR
+
 ## Download the source code.
 REPO_URL="https://github.com/ps2dev/newlib.git"
 REPO_FOLDER="newlib"
 BRANCH_NAME="ee-v4.1.0"
 if test ! -d "$REPO_FOLDER"; then
-  git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL" && cd "$REPO_FOLDER" || exit 1
+  git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
+  cd "$REPO_FOLDER"
 else
-  cd "$REPO_FOLDER" && git fetch origin && git reset --hard "origin/${BRANCH_NAME}" && git checkout "$BRANCH_NAME" || exit 1
+  cd "$REPO_FOLDER"
+  git fetch origin
+  git reset --hard "origin/${BRANCH_NAME}"
+  git checkout "$BRANCH_NAME"
 fi
 
 TARGET_ALIAS="ee"
@@ -31,16 +42,18 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## Create and enter the toolchain/build directory
-rm -rf "build-$TARGET" && mkdir "build-$TARGET" && cd "build-$TARGET" || { exit 1; }
+rm -rf "build-$TARGET"
+mkdir "build-$TARGET"
+cd "build-$TARGET"
 
 ## Configure the build.
 CFLAGS_FOR_TARGET="-O2" ../configure \
   --prefix="$PS2DEV/$TARGET_ALIAS" \
   --target="$TARGET" \
-  $TARG_XTRA_OPTS || { exit 1; }
+  $TARG_XTRA_OPTS
 
 ## Compile and install.
-make --quiet -j "$PROC_NR" clean          || { exit 1; }
-make --quiet -j "$PROC_NR" all            || { exit 1; }
-make --quiet -j "$PROC_NR" install-strip  || { exit 1; }
-make --quiet -j "$PROC_NR" clean          || { exit 1; }
+make --quiet -j "$PROC_NR" clean
+make --quiet -j "$PROC_NR" all
+make --quiet -j "$PROC_NR" install-strip
+make --quiet -j "$PROC_NR" clean
