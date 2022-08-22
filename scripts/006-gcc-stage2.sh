@@ -1,5 +1,5 @@
 #!/bin/bash
-# 005-gcc-stage2.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
+# 006-gcc-stage2.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
 ## Exit with code 1 when any command executed returns a non-zero exit code.
 onerr()
@@ -52,12 +52,13 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --target="$TARGET" \
     --enable-languages="c,c++" \
     --with-float=hard \
-    --with-headers="$PS2DEV/$TARGET_ALIAS/$TARGET/include" \
+    --with-sysroot="$PS2DEV/$TARGET_ALIAS/$TARGET" \
     --with-newlib \
     --disable-libssp \
     --disable-multilib \
-    --enable-cxx-flags=-G0 \
     --disable-tls \
+    --enable-cxx-flags=-G0 \
+    --enable-threads=posix \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
