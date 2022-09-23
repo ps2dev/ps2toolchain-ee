@@ -52,7 +52,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --target="$TARGET" \
     --enable-languages="c" \
     --with-float=hard \
-    --with-headers=no \
+    --without-headers \
     --without-newlib \
     --disable-libssp \
     --disable-multilib \
