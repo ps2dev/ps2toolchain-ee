@@ -15,7 +15,7 @@ trap onerr ERR
 ## Download the source code.
 REPO_URL="https://github.com/ps2dev/newlib.git"
 REPO_FOLDER="newlib"
-BRANCH_NAME="ee-v4.1.0"
+BRANCH_NAME="ee-v4.3.0"
 if test ! -d "$REPO_FOLDER"; then
   git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
 else
