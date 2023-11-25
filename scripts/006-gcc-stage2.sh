@@ -73,12 +73,13 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --disable-tls \
     --enable-cxx-flags=-G0 \
     --enable-threads=posix \
+    MAKEINFO=missing \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
-  make --quiet -j "$PROC_NR" all
-  make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
+  make --quiet -j "$PROC_NR" MAKEINFO=missing all
+  make --quiet -j "$PROC_NR" MAKEINFO=missing install-strip
+  make --quiet -j "$PROC_NR" MAKEINFO=missing clean
 
   ## Exit the build directory.
   cd ..
