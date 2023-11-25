@@ -1,5 +1,5 @@
 #!/bin/bash
-# 006-gcc-stage2.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
+# 006-gcc-stage2.sh by ps2dev developers
 
 ## Exit with code 1 when any command executed returns a non-zero exit code.
 onerr()
@@ -8,17 +8,28 @@ onerr()
 }
 trap onerr ERR
 
+## Read information from the configuration file.
+source "$(dirname "$0")/../config/ps2toolchain-ee-config.sh"
+
 ## Download the source code.
-REPO_URL="https://github.com/ps2dev/gcc.git"
-REPO_FOLDER="gcc"
-BRANCH_NAME="ee-v11.3.0"
+REPO_URL="$PS2TOOLCHAIN_EE_GCC_REPO_URL"
+REPO_REF="$PS2TOOLCHAIN_EE_GCC_DEFAULT_REPO_REF"
+REPO_FOLDER="$(s="$REPO_URL"; s=${s##*/}; printf "%s" "${s%.*}")"
+
+# Checking if a specific Git reference has been passed in parameter $1
+if test -n "$1"; then
+  REPO_REF="$1"
+  printf 'Using specified repo reference %s\n' "$REPO_REF"
+fi
+
 if test ! -d "$REPO_FOLDER"; then
-  git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"  
+  git clone --depth 1 -b "$REPO_REF" "$REPO_URL" "$REPO_FOLDER"
 else
   git -C "$REPO_FOLDER" fetch origin
-  git -C "$REPO_FOLDER" reset --hard "origin/${BRANCH_NAME}"
-  git -C "$REPO_FOLDER" checkout "$BRANCH_NAME"
+  git -C "$REPO_FOLDER" reset --hard "origin/$REPO_REF"
+  git -C "$REPO_FOLDER" checkout "$REPO_REF"
 fi
+
 cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
@@ -59,15 +70,17 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --with-newlib \
     --disable-libssp \
     --disable-multilib \
+    --disable-nls \
     --disable-tls \
     --enable-cxx-flags=-G0 \
     --enable-threads=posix \
+    MAKEINFO=missing \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
-  make --quiet -j "$PROC_NR" all
-  make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
+  make --quiet -j "$PROC_NR" MAKEINFO=missing all
+  make --quiet -j "$PROC_NR" MAKEINFO=missing install-strip
+  make --quiet -j "$PROC_NR" MAKEINFO=missing clean
 
   ## Exit the build directory.
   cd ..
