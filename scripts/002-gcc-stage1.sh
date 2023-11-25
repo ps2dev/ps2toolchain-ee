@@ -70,6 +70,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --without-newlib \
     --disable-libssp \
     --disable-multilib \
+    --disable-nls \
     --disable-tls \
     MAKEINFO=missing \
     $TARG_XTRA_OPTS

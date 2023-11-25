@@ -70,6 +70,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --with-newlib \
     --disable-libssp \
     --disable-multilib \
+    --disable-nls \
     --disable-tls \
     --enable-cxx-flags=-G0 \
     --enable-threads=posix \
