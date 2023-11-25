@@ -1,5 +1,5 @@
 #!/bin/bash
-# pthread-embedded.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
+# 005-pthread-embedded.sh by ps2dev developers
 
 ## Exit with code 1 when any command executed returns a non-zero exit code.
 onerr()
@@ -8,17 +8,28 @@ onerr()
 }
 trap onerr ERR
 
+## Read information from the configuration file.
+source "$(dirname "$0")/../config/ps2toolchain-ee-config.sh"
+
 ## Download the source code.
-REPO_URL="https://github.com/ps2dev/pthread-embedded.git"
-REPO_FOLDER="pthread-embedded"
-BRANCH_NAME="platform_agnostic"
+REPO_URL="$PS2TOOLCHAIN_EE_PTHREAD_EMBEDDED_REPO_URL"
+REPO_REF="$PS2TOOLCHAIN_EE_PTHREAD_EMBEDDED_DEFAULT_REPO_REF"
+REPO_FOLDER="$(s="$REPO_URL"; s=${s##*/}; printf "%s" "${s%.*}")"
+
+# Checking if a specific Git reference has been passed in parameter $1
+if test -n "$1"; then
+  REPO_REF="$1"
+  printf 'Using specified repo reference %s\n' "$REPO_REF"
+fi
+
 if test ! -d "$REPO_FOLDER"; then
-  git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
+  git clone --depth 1 -b "$REPO_REF" "$REPO_URL" "$REPO_FOLDER"
 else
   git -C "$REPO_FOLDER" fetch origin
-  git -C "$REPO_FOLDER" reset --hard "origin/${BRANCH_NAME}"
-  git -C "$REPO_FOLDER" checkout "$BRANCH_NAME"
+  git -C "$REPO_FOLDER" reset --hard "origin/$REPO_REF"
+  git -C "$REPO_FOLDER" checkout "$REPO_REF"
 fi
+
 cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
@@ -30,7 +41,7 @@ PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## For each target...
 for TARGET in "mips64r5900el-ps2-elf"; do
-  cd platform/ps2 || { exit 1; }
+  cd platform/ps2
 
   ## Compile and install.
   make --quiet -j "$PROC_NR" all
