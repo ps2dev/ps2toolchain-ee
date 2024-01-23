@@ -38,6 +38,7 @@ cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
 TARG_XTRA_OPTS=""
+TARGET_CFLAGS="-DPREFER_SIZE_OVER_SPEED=1 -Os -gdwarf-2 -gz -flto -ffat-lto-objects"
 OSVER=$(uname)
 
 if [ "${OSVER:0:10}" == MINGW64_NT ]; then
@@ -67,7 +68,8 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   cd "build-$TARGET"
 
   ## Configure the build.
-  CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED=1 -Os" ../configure \
+  CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
+  ../configure \
     --prefix="$PS2DEV_TMP/$TARGET_ALIAS" \
     --target="$TARGET" \
     --disable-newlib-supplied-syscalls \

@@ -34,6 +34,7 @@ cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
 TARG_XTRA_OPTS=""
+TARGET_CFLAGS="-O2 -gdwarf-2 -gz -flto -ffat-lto-objects"
 OSVER=$(uname)
 
 # Workaround to build with newer mingw-w64 https://github.com/msys2/MINGW-packages/commit/4360ed1a7470728be1dba0687df764604f1992d9
@@ -60,6 +61,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   cd "build-$TARGET-stage1"
 
   ## Configure the build.
+  CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
   ../configure \
     --quiet \
     --prefix="$PS2DEV/$TARGET_ALIAS" \
