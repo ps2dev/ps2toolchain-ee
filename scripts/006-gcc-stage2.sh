@@ -34,7 +34,7 @@ cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
 TARG_XTRA_OPTS=""
-TARGET_CFLAGS="-O2 -gdwarf-2 -gz -flto -ffat-lto-objects"
+TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
 OSVER=$(uname)
 
 # Workaround to build with newer mingw-w64 https://github.com/msys2/MINGW-packages/commit/4360ed1a7470728be1dba0687df764604f1992d9

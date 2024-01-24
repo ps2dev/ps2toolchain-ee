@@ -38,7 +38,7 @@ cd "$REPO_FOLDER"
 
 TARGET_ALIAS="ee"
 TARG_XTRA_OPTS=""
-TARGET_CFLAGS="-DPREFER_SIZE_OVER_SPEED=1 -Os -gdwarf-2 -gz -flto -ffat-lto-objects"
+TARGET_CFLAGS="-DPREFER_SIZE_OVER_SPEED=1 -Os -gdwarf-2 -gz"
 OSVER=$(uname)
 
 if [ "${OSVER:0:10}" == MINGW64_NT ]; then
