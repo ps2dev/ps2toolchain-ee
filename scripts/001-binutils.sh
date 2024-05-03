@@ -36,14 +36,17 @@ TARGET_ALIAS="ee"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
 
-if [ "${OSVER:0:10}" == MINGW64_NT ]; then
-  export lt_cv_sys_max_cmd_len=8000
-  export CC=x86_64-w64-mingw32-gcc
-  TARG_XTRA_OPTS="--host=x86_64-w64-mingw32"
-elif [ "${OSVER:0:10}" == MINGW32_NT ]; then
-  export lt_cv_sys_max_cmd_len=8000
-  export CC=i686-w64-mingw32-gcc
-  TARG_XTRA_OPTS="--host=i686-w64-mingw32"
+## If using MacOS Apple, set gmp and mpfr paths using TARG_XTRA_OPTS 
+## (this is needed for Apple Silicon but we will do it for all MacOS systems)
+if [ "$(uname -s)" = "Darwin" ]; then
+  ## Check if using brew
+  if command -v brew &> /dev/null; then
+    TARG_XTRA_OPTS="--with-gmp=$(brew --prefix gmp) --with-mpfr=$(brew --prefix mpfr)"
+  fi
+  ## Check if using MacPorts
+  if command -v port &> /dev/null; then
+    TARG_XTRA_OPTS="--with-gmp=$(port -q prefix gmp) --with-mpfr=$(port -q prefix mpfr)"
+  fi
 fi
 
 ## Determine the maximum number of processes that Make can work with.

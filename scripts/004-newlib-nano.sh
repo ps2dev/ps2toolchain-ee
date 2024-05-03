@@ -41,16 +41,6 @@ TARG_XTRA_OPTS=""
 TARGET_CFLAGS="-DPREFER_SIZE_OVER_SPEED=1 -Os -gdwarf-2 -gz"
 OSVER=$(uname)
 
-if [ "${OSVER:0:10}" == MINGW64_NT ]; then
-  export lt_cv_sys_max_cmd_len=8000
-  export CC=x86_64-w64-mingw32-gcc
-  TARG_XTRA_OPTS="--host=x86_64-w64-mingw32"
-elif [ "${OSVER:0:10}" == MINGW32_NT ]; then
-  export lt_cv_sys_max_cmd_len=8000
-  export CC=i686-w64-mingw32-gcc
-  TARG_XTRA_OPTS="--host=i686-w64-mingw32"
-fi
-
 PS2DEV_TMP="$PWD/ps2dev-tmp"
 
 ## Create ps2dev-tmp folder
