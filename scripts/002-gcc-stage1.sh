@@ -37,17 +37,17 @@ TARG_XTRA_OPTS=""
 TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
 OSVER=$(uname)
 
-# Workaround to build with newer mingw-w64 https://github.com/msys2/MINGW-packages/commit/4360ed1a7470728be1dba0687df764604f1992d9
-if [ "${OSVER:0:10}" == MINGW64_NT ]; then
-  export lt_cv_sys_max_cmd_len=8000
-  export CC=x86_64-w64-mingw32-gcc
-  TARG_XTRA_OPTS="--host=x86_64-w64-mingw32"
-  export CPPFLAGS="-DWIN32_LEAN_AND_MEAN -DCOM_NO_WINDOWS_H"
-elif [ "${OSVER:0:10}" == MINGW32_NT ]; then
-  export lt_cv_sys_max_cmd_len=8000
-  export CC=i686-w64-mingw32-gcc
-  TARG_XTRA_OPTS="--host=i686-w64-mingw32"
-  export CPPFLAGS="-DWIN32_LEAN_AND_MEAN -DCOM_NO_WINDOWS_H"
+## If using MacOS Apple, set gmp, mpfr and mpc paths using TARG_XTRA_OPTS 
+## (this is needed for Apple Silicon but we will do it for all MacOS systems)
+if [ "$(uname -s)" = "Darwin" ]; then
+  ## Check if using brew
+  if command -v brew &> /dev/null; then
+    TARG_XTRA_OPTS="--with-gmp=$(brew --prefix gmp) --with-mpfr=$(brew --prefix mpfr) --with-mpc=$(brew --prefix libmpc)"
+  fi
+  ## Check if using MacPorts
+  if command -v port &> /dev/null; then
+    TARG_XTRA_OPTS="--with-gmp=$(port -q prefix gmp) --with-mpfr=$(port -q prefix mpfr) --with-mpc=$(port -q prefix libmpc)"
+  fi
 fi
 
 ## Determine the maximum number of processes that Make can work with.
@@ -74,13 +74,12 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --disable-multilib \
     --disable-nls \
     --disable-tls \
-    MAKEINFO=missing \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
-  make --quiet -j "$PROC_NR" MAKEINFO=missing all
-  make --quiet -j "$PROC_NR" MAKEINFO=missing install-strip
-  make --quiet -j "$PROC_NR" MAKEINFO=missing clean
+  make --quiet -j "$PROC_NR" all
+  make --quiet -j "$PROC_NR" install-strip
+  make --quiet -j "$PROC_NR" clean
 
   ## Exit the build directory.
   cd ..
