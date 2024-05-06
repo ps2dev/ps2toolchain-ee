@@ -43,10 +43,11 @@ if [ "$(uname -s)" = "Darwin" ]; then
   ## Check if using brew
   if command -v brew &> /dev/null; then
     TARG_XTRA_OPTS="--with-gmp=$(brew --prefix gmp) --with-mpfr=$(brew --prefix mpfr) --with-mpc=$(brew --prefix libmpc)"
-  fi
+  elif command -v port &> /dev/null; then
   ## Check if using MacPorts
-  if command -v port &> /dev/null; then
-    TARG_XTRA_OPTS="--with-gmp=$(port -q prefix gmp) --with-mpfr=$(port -q prefix mpfr) --with-mpc=$(port -q prefix libmpc)"
+    MACPORT_BASE=$(dirname `port -q contents gmp|grep gmp.h`|sed s#/include##g)
+    echo Macport base is $MACPORT_BASE
+    TARG_XTRA_OPTS="--with-gmp=$MACPORT_BASE --with-mpfr=$MACPORT_BASE --with-mpc=$MACPORT_BASE"
   fi
 fi
 
