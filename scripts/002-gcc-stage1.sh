@@ -8,6 +8,20 @@ onerr()
 }
 trap onerr ERR
 
+TARGET_ALIAS="ee"
+TARG_XTRA_OPTS=""
+TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
+OSVER=$(uname)
+
+## Create a temporal folder where to build the phase 1 of the toolchain.
+TMP_TOOLCHAIN_BUILD_DIR=$(pwd)/tmp_toolchain_build
+rm -rf "${TMP_TOOLCHAIN_BUILD_DIR}" && mkdir "${TMP_TOOLCHAIN_BUILD_DIR}"
+## Copy toolchain content ($PS2DEV) to the temporal folder.
+cp -r "${PS2DEV}/" "${TMP_TOOLCHAIN_BUILD_DIR}"
+
+## Add the toolchain to the PATH.
+export PATH="$TMP_TOOLCHAIN_BUILD_DIR/$TARGET_ALIAS/bin:$PATH"
+
 ## Read information from the configuration file.
 source "$(dirname "$0")/../config/ps2toolchain-ee-config.sh"
 
@@ -31,11 +45,6 @@ else
 fi
 
 cd "$REPO_FOLDER"
-
-TARGET_ALIAS="ee"
-TARG_XTRA_OPTS=""
-TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
-OSVER=$(uname)
 
 ## If using MacOS Apple, set gmp, mpfr and mpc paths using TARG_XTRA_OPTS 
 ## (this is needed for Apple Silicon but we will do it for all MacOS systems)
@@ -65,7 +74,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
   ../configure \
     --quiet \
-    --prefix="$PS2DEV/$TARGET_ALIAS" \
+    --prefix="$TMP_TOOLCHAIN_BUILD_DIR/$TARGET_ALIAS" \
     --target="$TARGET" \
     --enable-languages="c" \
     --with-float=hard \

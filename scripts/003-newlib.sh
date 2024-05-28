@@ -8,6 +8,16 @@ onerr()
 }
 trap onerr ERR
 
+TARGET_ALIAS="ee"
+TARG_XTRA_OPTS=""
+TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
+OSVER=$(uname)
+
+## Create a temporal folder where to build the phase 1 of the toolchain.
+TMP_TOOLCHAIN_BUILD_DIR=$(pwd)/tmp_toolchain_build
+## Add the toolchain to the PATH.
+export PATH="$TMP_TOOLCHAIN_BUILD_DIR/$TARGET_ALIAS/bin:$PATH"
+
 ## Read information from the configuration file.
 source "$(dirname "$0")/../config/ps2toolchain-ee-config.sh"
 
@@ -31,11 +41,6 @@ else
 fi
 
 cd "$REPO_FOLDER"
-
-TARGET_ALIAS="ee"
-TARG_XTRA_OPTS=""
-TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
-OSVER=$(uname)
 
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
@@ -67,3 +72,6 @@ for TARGET in "mips64r5900el-ps2-elf"; do
 
   ## End target.
 done
+
+## Copy contents of the toolchain to the temporal folder.
+cp -r "${PS2DEV}/" "${TMP_TOOLCHAIN_BUILD_DIR}"
