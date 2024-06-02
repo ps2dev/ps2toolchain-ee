@@ -73,13 +73,14 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --without-newlib \
     --disable-libssp \
     --disable-multilib \
+    --disable-libatomic \
     --disable-nls \
     --disable-tls \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
-  make --quiet -j "$PROC_NR" all
-  make --quiet -j "$PROC_NR" install-strip
+  make --quiet -j "$PROC_NR" all-gcc
+  make --quiet -j "$PROC_NR" install-gcc
   make --quiet -j "$PROC_NR" clean
 
   ## Exit the build directory.
