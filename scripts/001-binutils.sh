@@ -63,6 +63,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --quiet \
     --prefix="$PS2DEV/$TARGET_ALIAS" \
     --target="$TARGET" \
+    --with-sysroot="$PS2DEV/$TARGET_ALIAS/$TARGET" \
     --disable-separate-code \
     --disable-sim \
     --disable-nls \

@@ -52,6 +52,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   ../configure \
     --prefix="$PS2DEV/$TARGET_ALIAS" \
     --target="$TARGET" \
+    --with-sysroot="$PS2DEV/$TARGET_ALIAS/$TARGET" \
     --enable-newlib-retargetable-locking \
     --enable-newlib-multithread \
     --enable-newlib-io-c99-formats \

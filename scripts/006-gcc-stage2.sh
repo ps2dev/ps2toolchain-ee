@@ -71,6 +71,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --enable-languages="c,c++" \
     --with-float=hard \
     --with-sysroot="$PS2DEV/$TARGET_ALIAS/$TARGET" \
+    --with-native-system-header-dir="/include" \
     --with-newlib \
     --disable-libssp \
     --disable-multilib \
