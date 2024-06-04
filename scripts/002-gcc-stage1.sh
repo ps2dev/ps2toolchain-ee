@@ -71,11 +71,17 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --with-float=hard \
     --without-headers \
     --without-newlib \
-    --disable-libssp \
+    --disable-libgcc \
+    --disable-shared \
+    --disable-threads \
     --disable-multilib \
     --disable-libatomic \
     --disable-nls \
     --disable-tls \
+    --disable-libssp \
+    --disable-libgomp \
+    --disable-libmudflap \
+    --disable-libquadmath \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
