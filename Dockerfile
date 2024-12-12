@@ -1,5 +1,6 @@
 # First stage of Dockerfile
-FROM alpine:latest
+# Point to fixed 3.20.3 as 3.21.0 has issues compiling GCC
+FROM alpine:3.20.3
 
 ENV PS2DEV /usr/local/ps2dev
 ENV PATH   $PATH:${PS2DEV}/ee/bin
