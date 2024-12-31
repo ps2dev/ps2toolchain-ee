@@ -67,6 +67,7 @@ for TARGET in "mips64r5900el-ps2-elf"; do
     --disable-separate-code \
     --disable-sim \
     --disable-nls \
+    --with-python=no \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
