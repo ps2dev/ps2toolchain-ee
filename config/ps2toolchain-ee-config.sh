@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PS2TOOLCHAIN_EE_BINUTILS_REPO_URL="https://github.com/ps2dev/binutils-gdb.git"
-PS2TOOLCHAIN_EE_BINUTILS_DEFAULT_REPO_REF="ee-v2.41.0"
+PS2TOOLCHAIN_EE_BINUTILS_DEFAULT_REPO_REF="ee-v2.44.0"
 PS2TOOLCHAIN_EE_GCC_REPO_URL="https://github.com/ps2dev/gcc.git"
 PS2TOOLCHAIN_EE_GCC_DEFAULT_REPO_REF="ee-v14.2.0"
 PS2TOOLCHAIN_EE_NEWLIB_REPO_URL="https://github.com/ps2dev/newlib.git"
