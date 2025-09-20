@@ -49,6 +49,9 @@ if [ "$(uname -s)" = "Darwin" ]; then
     printf 'Macport base is %s\n' "$MACPORT_BASE"
     TARG_XTRA_OPTS="--with-system-zlib --with-libiconv_prefix=$MACPORT_BASE --with-gmp=$MACPORT_BASE --with-mpfr=$MACPORT_BASE --with-mpc=$MACPORT_BASE"
   fi
+  mkdir -p "build-sed-wrapper"
+  ln -sf  "$(which gsed)" "build-sed-wrapper/sed"
+  export PATH="$(realpath build-sed-wrapper):$PATH"
 fi
 
 ## Determine the maximum number of processes that Make can work with.
