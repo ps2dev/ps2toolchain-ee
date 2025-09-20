@@ -47,7 +47,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
   ## Check if using MacPorts
     MACPORT_BASE=$(dirname `port -q contents gmp|grep gmp.h`|sed s#/include##g)
     echo Macport base is $MACPORT_BASE
-    TARG_XTRA_OPTS="--with-system-zlib --with-gmp=$MACPORT_BASE --with-mpfr=$MACPORT_BASE --with-mpc=$MACPORT_BASE"
+    TARG_XTRA_OPTS="--with-system-zlib --with-libiconv_prefix=$MACPORT_BASE --with-gmp=$MACPORT_BASE --with-mpfr=$MACPORT_BASE --with-mpc=$MACPORT_BASE"
   fi
 fi
 
