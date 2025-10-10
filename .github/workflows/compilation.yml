@@ -10,7 +10,9 @@ on:
       - '**.md'
       - '**.rst'
   repository_dispatch:
-    types: [run_build, run_release]
+    types:
+      - run_build
+      - run_release
   workflow_dispatch: {}
 env:
   HOMEBREW_NO_ANALYTICS: 1
@@ -31,7 +33,7 @@ jobs:
             container: null
             container-options: " "
             macos-package-manager: brew
-          - runs-on: macos-13
+          - runs-on: macos-15-intel
             architecture: x86_64
             shell: bash
             container: null
@@ -112,30 +114,9 @@ jobs:
         if test -f ./build-all.sh; then ./build-all.sh; fi
         if test -f ./toolchain.sh; then ./toolchain.sh; fi
 
-    - name: Print version of executables (ps2toolchain-iop)
-      if: github.event.repository.name == 'ps2toolchain-iop'
+    - name: Print version of executables
       run: |
-        export PS2DEV=$PWD/ps2dev
-        export PATH=$PATH:$PS2DEV/iop/bin
-        mipsel-none-elf-as --version
-        mipsel-none-elf-ld --version
-        mipsel-none-elf-gcc --version
-
-    - name: Print version of executables (ps2toolchain-ee)
-      if: github.event.repository.name == 'ps2toolchain-ee'
-      run: |
-        export PS2DEV=$PWD/ps2dev
-        export PATH=$PATH:$PS2DEV/ee/bin
-        mips64r5900el-ps2-elf-as --version
-        mips64r5900el-ps2-elf-ld --version
-        mips64r5900el-ps2-elf-gcc --version
-
-    - name: Print version of executables (ps2toolchain-dvp)
-      if: github.event.repository.name == 'ps2toolchain-dvp'
-      run: |
-        export PS2DEV=$PWD/ps2dev
-        export PATH=$PATH:$PS2DEV/dvp/bin
-        dvp-as --version
+        if test -f ./config/ci-print-version.sh; then ./config/ci-print-version.sh; fi
 
     - name: Get short SHA
       id: slug
